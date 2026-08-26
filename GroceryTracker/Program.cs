@@ -1,4 +1,6 @@
+using FastEndpoints;
 using GroceryTracker.Domain;
+using GroceryTracker.Infrastructure.Startup;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +13,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<GroceryContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("GroceryContext") ?? throw new InvalidOperationException("Connection string 'GroceryContext' not found.")));
+builder.Services.AddApplicationServices();
+
+builder.Services.AddFastEndpoints();
 
 var app = builder.Build();
 
@@ -20,12 +25,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseFastEndpoints();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
-app.MapControllers();
 
 using var serviceScope = app.Services.CreateScope();
 var context = serviceScope.ServiceProvider.GetRequiredService<GroceryContext>();

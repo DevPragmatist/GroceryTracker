@@ -9,185 +9,184 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace GroceryTracker.Migrations
+namespace GroceryTracker.Migrations;
+
+[DbContext(typeof(GroceryContext))]
+[Migration("20250928220032_InitialCreate")]
+partial class InitialCreate
 {
-    [DbContext(typeof(GroceryContext))]
-    [Migration("20250928220032_InitialCreate")]
-    partial class InitialCreate
+    /// <inheritdoc />
+    protected override void BuildTargetModel(ModelBuilder modelBuilder)
     {
-        /// <inheritdoc />
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
-        {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.9")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+        modelBuilder
+            .HasAnnotation("ProductVersion", "9.0.9")
+            .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+        SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("GroceryTracker.Domain.Entities.Category", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+        modelBuilder.Entity("GroceryTracker.Domain.Entities.Category", b =>
+            {
+                b.Property<Guid>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("DateCreated")
-                        .HasColumnType("datetimeoffset");
+                b.Property<DateTimeOffset>("DateCreated")
+                    .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                b.Property<string>("Description")
+                    .IsRequired()
+                    .HasMaxLength(500)
+                    .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .HasColumnType("nvarchar(100)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Categories");
-                });
+                b.ToTable("Categories");
+            });
 
-            modelBuilder.Entity("GroceryTracker.Domain.Entities.GroceryItem", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+        modelBuilder.Entity("GroceryTracker.Domain.Entities.GroceryItem", b =>
+            {
+                b.Property<Guid>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier");
+                b.Property<Guid>("CategoryId")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("DateCreated")
-                        .HasColumnType("datetimeoffset");
+                b.Property<DateTimeOffset>("DateCreated")
+                    .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .HasColumnType("nvarchar(200)");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                b.Property<decimal>("Price")
+                    .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("Size")
-                        .HasColumnType("decimal(18,2)");
+                b.Property<decimal>("Size")
+                    .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid?>("StoreId")
-                        .HasColumnType("uniqueidentifier");
+                b.Property<Guid?>("StoreId")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("CategoryId");
+                b.HasIndex("CategoryId");
 
-                    b.HasIndex("StoreId");
+                b.HasIndex("StoreId");
 
-                    b.ToTable("GroceryItems");
-                });
+                b.ToTable("GroceryItems");
+            });
 
-            modelBuilder.Entity("GroceryTracker.Domain.Entities.PriceHistory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+        modelBuilder.Entity("GroceryTracker.Domain.Entities.PriceHistory", b =>
+            {
+                b.Property<Guid>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("DateCreated")
-                        .HasColumnType("datetimeoffset");
+                b.Property<DateTimeOffset>("DateCreated")
+                    .HasColumnType("datetimeoffset");
 
-                    b.Property<Guid>("GroceryItemId")
-                        .HasColumnType("uniqueidentifier");
+                b.Property<Guid>("GroceryItemId")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.Property<decimal>("NewPrice")
-                        .HasColumnType("decimal(18,2)");
+                b.Property<decimal>("NewPrice")
+                    .HasColumnType("decimal(18,2)");
 
-                    b.Property<decimal>("OldPrice")
-                        .HasColumnType("decimal(18,2)");
+                b.Property<decimal>("OldPrice")
+                    .HasColumnType("decimal(18,2)");
 
-                    b.Property<Guid>("StoreId")
-                        .HasColumnType("uniqueidentifier");
+                b.Property<Guid>("StoreId")
+                    .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("GroceryItemId");
+                b.HasIndex("GroceryItemId");
 
-                    b.HasIndex("StoreId");
+                b.HasIndex("StoreId");
 
-                    b.ToTable("PriceHistories");
-                });
+                b.ToTable("PriceHistories");
+            });
 
-            modelBuilder.Entity("GroceryTracker.Domain.Entities.Store", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+        modelBuilder.Entity("GroceryTracker.Domain.Entities.Store", b =>
+            {
+                b.Property<Guid>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTimeOffset>("DateCreated")
-                        .HasColumnType("datetimeoffset");
+                b.Property<DateTimeOffset>("DateCreated")
+                    .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("Location")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                b.Property<string>("Location")
+                    .IsRequired()
+                    .HasMaxLength(500)
+                    .HasColumnType("nvarchar(500)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
+                b.Property<string>("Name")
+                    .IsRequired()
+                    .HasMaxLength(200)
+                    .HasColumnType("nvarchar(200)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Stores");
-                });
+                b.ToTable("Stores");
+            });
 
-            modelBuilder.Entity("GroceryTracker.Domain.Entities.GroceryItem", b =>
-                {
-                    b.HasOne("GroceryTracker.Domain.Entities.Category", "Category")
-                        .WithMany("GroceryItems")
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+        modelBuilder.Entity("GroceryTracker.Domain.Entities.GroceryItem", b =>
+            {
+                b.HasOne("GroceryTracker.Domain.Entities.Category", "Category")
+                    .WithMany("GroceryItems")
+                    .HasForeignKey("CategoryId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.HasOne("GroceryTracker.Domain.Entities.Store", null)
-                        .WithMany("GroceryItems")
-                        .HasForeignKey("StoreId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                b.HasOne("GroceryTracker.Domain.Entities.Store", null)
+                    .WithMany("GroceryItems")
+                    .HasForeignKey("StoreId")
+                    .OnDelete(DeleteBehavior.SetNull);
 
-                    b.Navigation("Category");
-                });
+                b.Navigation("Category");
+            });
 
-            modelBuilder.Entity("GroceryTracker.Domain.Entities.PriceHistory", b =>
-                {
-                    b.HasOne("GroceryTracker.Domain.Entities.GroceryItem", "GroceryItem")
-                        .WithMany("PriceHistories")
-                        .HasForeignKey("GroceryItemId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+        modelBuilder.Entity("GroceryTracker.Domain.Entities.PriceHistory", b =>
+            {
+                b.HasOne("GroceryTracker.Domain.Entities.GroceryItem", "GroceryItem")
+                    .WithMany("PriceHistories")
+                    .HasForeignKey("GroceryItemId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.HasOne("GroceryTracker.Domain.Entities.Store", "Store")
-                        .WithMany()
-                        .HasForeignKey("StoreId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                b.HasOne("GroceryTracker.Domain.Entities.Store", "Store")
+                    .WithMany()
+                    .HasForeignKey("StoreId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
 
-                    b.Navigation("GroceryItem");
+                b.Navigation("GroceryItem");
 
-                    b.Navigation("Store");
-                });
+                b.Navigation("Store");
+            });
 
-            modelBuilder.Entity("GroceryTracker.Domain.Entities.Category", b =>
-                {
-                    b.Navigation("GroceryItems");
-                });
+        modelBuilder.Entity("GroceryTracker.Domain.Entities.Category", b =>
+            {
+                b.Navigation("GroceryItems");
+            });
 
-            modelBuilder.Entity("GroceryTracker.Domain.Entities.GroceryItem", b =>
-                {
-                    b.Navigation("PriceHistories");
-                });
+        modelBuilder.Entity("GroceryTracker.Domain.Entities.GroceryItem", b =>
+            {
+                b.Navigation("PriceHistories");
+            });
 
-            modelBuilder.Entity("GroceryTracker.Domain.Entities.Store", b =>
-                {
-                    b.Navigation("GroceryItems");
-                });
+        modelBuilder.Entity("GroceryTracker.Domain.Entities.Store", b =>
+            {
+                b.Navigation("GroceryItems");
+            });
 #pragma warning restore 612, 618
-        }
     }
 }

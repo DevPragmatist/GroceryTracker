@@ -6,8 +6,9 @@ namespace GroceryTracker.Domain.Entities;
 public class PriceHistory : Entity
 {
     public Guid GroceryItemId { get; set; }
-    public required GroceryItem GroceryItem { get; set; }
-    public required Store Store { get; set; }
+    public  GroceryItem GroceryItem { get; set; } = null!;
+    public required Guid StoreId { get; set; }
+    public  Store Store { get; set; } = null!;
     public decimal OldPrice { get; set; }
     public decimal NewPrice { get; set; }
 }

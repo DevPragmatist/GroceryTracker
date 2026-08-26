@@ -8,8 +8,8 @@ public class GroceryItem : Entity
     public required string Name { get; set; }
     public decimal Size { get; set; }
     public decimal Price { get; set; }
-    public Guid CategoryId { get; set; }
-    public required Category Category { get; set; }
+    public required Guid CategoryId { get; set; }
+    public Category Category { get; set; } = null!;
     public List<PriceHistory> PriceHistories { get; set; } = [];
     
 }
