@@ -8,7 +8,7 @@ public class GroceryContext : DbContext, IUnitOfWork
     public GroceryContext(DbContextOptions<GroceryContext> options) : base(options)
     {
     }
-    public DbSet<GroceryItem> GroceryItems { get; set; }
+    public DbSet<Product> Products { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Store> Stores { get; set; }
     public DbSet<PriceHistory> PriceHistories { get; set; }

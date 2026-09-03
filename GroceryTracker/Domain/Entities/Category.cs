@@ -6,17 +6,17 @@ namespace GroceryTracker.Domain.Entities;
 public class Category : Entity
 {
     public required string Name { get; set; }
-    public required string Description { get; set; }
+    public string? Description { get; set; }
 
-    public List<GroceryItem> GroceryItems { get; set; } = [];
+    public List<Product> Products { get; set; } = [];
 }
 
 public sealed class CategoryEntityTypeConfiguration : IEntityTypeConfiguration<Category>
 {
     public void Configure(EntityTypeBuilder<Category> builder){
-        builder.HasMany(c => c.GroceryItems)
-            .WithOne(gi => gi.Category)
-            .HasForeignKey(gi => gi.CategoryId)
+        builder.HasMany(c => c.Products)
+            .WithOne(p => p.Category)
+            .HasForeignKey(p => p.CategoryId)
             .OnDelete(DeleteBehavior.Cascade);
         
         builder.Property(c => c.Name)
@@ -24,7 +24,6 @@ public sealed class CategoryEntityTypeConfiguration : IEntityTypeConfiguration<C
             .HasMaxLength(100);
         
         builder.Property(c => c.Description)
-            .IsRequired()
             .HasMaxLength(500);
     }
 }

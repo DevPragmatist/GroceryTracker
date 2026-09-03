@@ -1,0 +1,17 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "GroceryTracker: Debug (Scalar)",
+      "type": "dotnet",
+      "request": "launch",
+      "projectPath": "${workspaceFolder}/GroceryTracker/GroceryTracker.csproj",
+      "launchSettingsProfile": "https",
+      "serverReadyAction": {
+        "action": "openExternally",
+        "pattern": "Now listening on: (https?://\\S+)",
+        "uriFormat": "%s/scalar"
+      }
+    }
+  ]
+}

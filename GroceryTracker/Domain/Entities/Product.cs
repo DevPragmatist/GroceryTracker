@@ -3,36 +3,36 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GroceryTracker.Domain.Entities;
 
-public class GroceryItem : Entity
+public class Product : Entity
 {
     public required string Name { get; set; }
     public decimal Size { get; set; }
     public decimal Price { get; set; }
     public required Guid CategoryId { get; set; }
-    public Category Category { get; set; } = null!;
+    public Category? Category { get; set; } = null!;
     public List<PriceHistory> PriceHistories { get; set; } = [];
     
 }
 
-public class GroceryItemEntityTypeConfiguration : IEntityTypeConfiguration<GroceryItem>
+public class ProductEntityTypeConfiguration : IEntityTypeConfiguration<Product>
 {
-    public void Configure(EntityTypeBuilder<GroceryItem> builder)
+    public void Configure(EntityTypeBuilder<Product> builder)
     {
-        builder.Property(gi => gi.Name)
+        builder.Property(p => p.Name)
             .IsRequired()
             .HasMaxLength(200);
         
-        builder.Property(gi => gi.Size)
+        builder.Property(p => p.Size)
             .IsRequired()
             .HasColumnType("decimal(18,2)");
         
-        builder.Property(gi => gi.Price)
+        builder.Property(p => p.Price)
             .IsRequired()
             .HasColumnType("decimal(18,2)");
         
-        builder.HasOne(gi => gi.Category)
-            .WithMany(c => c.GroceryItems)
-            .HasForeignKey(gi => gi.CategoryId)
+        builder.HasOne(p => p.Category)
+            .WithMany(c => c.Products)
+            .HasForeignKey(p => p.CategoryId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

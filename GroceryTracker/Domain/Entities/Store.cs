@@ -7,7 +7,7 @@ public class Store : Entity
 {
     public required string Name { get; set; }
     public required string Location { get; set; }
-    public List<GroceryItem> GroceryItems { get; set; } = [];
+    public List<Product> Products { get; set; } = [];
 }
 
 public class StoreEntityTypeConfiguration : IEntityTypeConfiguration<Store>
@@ -22,7 +22,7 @@ public class StoreEntityTypeConfiguration : IEntityTypeConfiguration<Store>
             .IsRequired()
             .HasMaxLength(500);
         
-        builder.HasMany(s => s.GroceryItems)
+        builder.HasMany(s => s.Products)
             .WithOne()
             .OnDelete(DeleteBehavior.SetNull);
     }

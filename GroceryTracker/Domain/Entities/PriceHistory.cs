@@ -5,33 +5,39 @@ namespace GroceryTracker.Domain.Entities;
 
 public class PriceHistory : Entity
 {
-    public Guid GroceryItemId { get; set; }
-    public  GroceryItem GroceryItem { get; set; } = null!;
+    public Guid ProductId { get; set; }
+    public  Product Product { get; set; } = null!;
     public required Guid StoreId { get; set; }
     public  Store Store { get; set; } = null!;
-    public decimal OldPrice { get; set; }
-    public decimal NewPrice { get; set; }
+    public decimal? OldPrice { get; set; }
+    public required decimal NewPrice { get; set; }
+    public required DateTime PurchaseDate { get; set; }
 }
 
 public class PriceHistoryEntityTypeConfiguration : IEntityTypeConfiguration<PriceHistory>
 {
     public void Configure(EntityTypeBuilder<PriceHistory> builder)
     {
-        builder.HasOne(ph => ph.GroceryItem)
-            .WithMany(gi => gi.PriceHistories)
-            .HasForeignKey(ph => ph.GroceryItemId)
+        builder.HasOne(ph => ph.Product)
+            .WithMany(p => p.PriceHistories)
+            .HasForeignKey(ph => ph.ProductId)
             .OnDelete(DeleteBehavior.Cascade);
+            
 
         builder.HasOne(ph => ph.Store)
             .WithMany()
-            .OnDelete(DeleteBehavior.SetNull);
+            .HasForeignKey(ph => ph.StoreId)
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.Property(ph => ph.OldPrice)
-            .IsRequired()
+            .IsRequired(false)
             .HasColumnType("decimal(18,2)");
         
         builder.Property(ph => ph.NewPrice)
             .IsRequired()
             .HasColumnType("decimal(18,2)");
+        
+        builder.Property(ph => ph.PurchaseDate)
+            .IsRequired();
     }
 }
