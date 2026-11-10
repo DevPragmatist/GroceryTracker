@@ -6,8 +6,7 @@ A modern ASP.NET Core REST API for managing grocery inventory, product pricing, 
 
 - Product management with multi-store support
 - Automatic price history tracking
-- Microsoft Entra ID authentication
-- Azure KeyVault integration
+- Local ASP.NET Core Identity authentication with JWT tokens
 - Interactive API documentation (Scalar UI)
 - Global error handling
 
@@ -16,8 +15,7 @@ A modern ASP.NET Core REST API for managing grocery inventory, product pricing, 
 - **.NET 10** - Latest framework with modern language features
 - **FastEndpoints** - High-performance REST API framework
 - **Entity Framework Core 10** - ORM with SQL Server
-- **Microsoft Entra ID** - Cloud identity authentication
-- **Azure KeyVault** - Secrets management
+- **ASP.NET Core Identity** - Local user accounts and password management
 - **Scalar** - Interactive API documentation
 
 ## Getting Started
@@ -25,7 +23,6 @@ A modern ASP.NET Core REST API for managing grocery inventory, product pricing, 
 ### Prerequisites
 - .NET 10 SDK or later
 - SQL Server (local or remote)
-- Azure subscription (for KeyVault and Entra ID)
 - Visual Studio Community 2026+ or VS Code
 
 ### Installation
@@ -38,14 +35,14 @@ dotnet build
 dotnet run
 ```
 
-Access the API docs at `http://localhost:5000/scalar/v1`
+Start the app in Visual Studio to open the plain HTML login/register page. After signing in, it stores the short-lived access token for the current browser session and opens Scalar at `/scalar/v1`. Visiting Scalar without a session token sends you back to the login page. Scalar uses the token as a Bearer credential for protected requests.
 
 ### Configuration
 
 Update `appsettings.Development.json`:
 - `ConnectionStrings:GroceryContext` - SQL Server connection string
-- `KeyVaultName` - Azure KeyVault name
-- Azure Entra ID settings (tenant ID, client ID)
+- JWT signing and token lifetime settings
+- SMTP settings for password reset email delivery
 
 Database migrations run automatically on startup.
 
@@ -98,14 +95,14 @@ Services/[Feature]/
 }
 ```
 
-Requires Microsoft Entra ID authentication.
+Requires a valid JWT from the local identity authentication flow. Authenticated user claims are available to API handlers through `HttpContext.User` (including the user ID, username, and email).
 
 ## Learning Objectives
 
 This portfolio project demonstrates:
 - Modern .NET best practices (.NET 10, nullable reference types, file-scoped namespaces)
 - Professional architecture patterns (feature slices, Unit of Work, DI)
-- Cloud integration (Azure KeyVault, Entra ID, Managed Identity)
+- Cloud integration-ready configuration for SQL Server and SMTP, with local identity auth
 - High-performance REST APIs (FastEndpoints)
 - Enterprise database design (EF Core, SQL Server)
 - Clean code principles (SOLID, DRY, separation of concerns)

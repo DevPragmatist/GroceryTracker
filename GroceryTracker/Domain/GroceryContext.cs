@@ -1,9 +1,11 @@
 ﻿using GroceryTracker.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace GroceryTracker.Domain;
 
-public class GroceryContext : DbContext, IUnitOfWork
+public class GroceryContext : IdentityDbContext<IdentityUser>, IUnitOfWork
 {
     public GroceryContext(DbContextOptions<GroceryContext> options) : base(options)
     {
@@ -12,6 +14,7 @@ public class GroceryContext : DbContext, IUnitOfWork
     public DbSet<Category> Categories { get; set; }
     public DbSet<Store> Stores { get; set; }
     public DbSet<PriceHistory> PriceHistories { get; set; }
+    public DbSet<RefreshToken> RefreshTokens { get; set; }
 
     public DbContext Context => this;
 
@@ -19,6 +22,7 @@ public class GroceryContext : DbContext, IUnitOfWork
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(GroceryContext).Assembly);
 
         var entities = modelBuilder.Model.GetEntityTypes()

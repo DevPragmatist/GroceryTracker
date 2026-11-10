@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GroceryTracker API sign in</title>
+  <style>
+    :root { color-scheme: light dark; font-family: system-ui, sans-serif; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #f3f5f7; color: #17212b; }
+    main { width: min(92vw, 420px); padding: 2rem; background: white; border-radius: 12px; box-shadow: 0 8px 32px #0002; }
+    h1 { margin-top: 0; }
+    nav { display: flex; gap: .5rem; margin-bottom: 1.25rem; }
+    button, input { font: inherit; }
+    nav button, form button, #continue { padding: .65rem 1rem; border: 0; border-radius: 6px; cursor: pointer; }
+    nav button[aria-selected="true"], form button, #continue { background: #125ca1; color: white; }
+    nav button[aria-selected="false"] { background: #e5e9ee; color: inherit; }
+    label { display: block; margin: .85rem 0 .25rem; font-weight: 600; }
+    input { box-sizing: border-box; width: 100%; padding: .65rem; border: 1px solid #aeb8c2; border-radius: 6px; }
+    form button { width: 100%; margin-top: 1.2rem; }
+    #message { min-height: 1.5rem; margin-top: 1rem; }
+    #message[data-error="true"] { color: #b42318; }
+    #continue { display: block; margin-top: 1rem; text-align: center; text-decoration: none; }
+    .hidden { display: none; }
+    @media (prefers-color-scheme: dark) {
+      body { background: #15191e; color: #e8edf2; }
+      main { background: #232a31; }
+      nav button[aria-selected="false"] { background: #343c45; color: inherit; }
+      input { background: #15191e; color: inherit; border-color: #66717d; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>GroceryTracker API</h1>
+    <p>Sign in or create an account to try the protected endpoints in Scalar.</p>
+    <nav aria-label="Account options">
+      <button id="login-tab" type="button" aria-selected="true">Log in</button>
+      <button id="register-tab" type="button" aria-selected="false">Register</button>
+    </nav>
+    <form id="login-form">
+      <label for="login-name">Username or email</label>
+      <input id="login-name" name="userNameOrEmail" autocomplete="username" required>
+      <label for="login-password">Password</label>
+      <input id="login-password" name="password" type="password" autocomplete="current-password" required>
+      <button type="submit">Log in and open Scalar</button>
+    </form>
+    <form id="register-form" class="hidden">
+      <label for="register-name">Username</label>
+      <input id="register-name" name="userName" autocomplete="username" required>
+      <label for="register-email">Email</label>
+      <input id="register-email" name="email" type="email" autocomplete="email" required>
+      <label for="register-password">Password</label>
+      <input id="register-password" name="password" type="password" autocomplete="new-password" minlength="12" required>
+      <label for="register-confirm">Confirm password</label>
+      <input id="register-confirm" name="confirmPassword" type="password" autocomplete="new-password" minlength="12" required>
+      <button type="submit">Register and open Scalar</button>
+    </form>
+    <p id="message" role="status" aria-live="polite"></p>
+    <a id="continue" class="hidden" href="/scalar/v1">Continue to Scalar</a>
+  </main>
+  <script>
+    const tokenKey = 'grocerytracker.accessToken';
+    const message = document.querySelector('#message');
+    const loginForm = document.querySelector('#login-form');
+    const registerForm = document.querySelector('#register-form');
+
+    function setMode(mode) {
+      const registering = mode === 'register';
+      loginForm.classList.toggle('hidden', registering);
+      registerForm.classList.toggle('hidden', !registering);
+      document.querySelector('#login-tab').setAttribute('aria-selected', String(!registering));
+      document.querySelector('#register-tab').setAttribute('aria-selected', String(registering));
+      message.textContent = '';
+      message.removeAttribute('data-error');
+    }
+
+    async function submitAuth(url, payload) {
+      message.textContent = 'Please wait…';
+      message.removeAttribute('data-error');
+      try {
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const result = await response.json().catch(() => null);
+        if (!response.ok) {
+          const detail = result?.message || result?.detail || result?.title || 'Authentication failed. Check your details and try again.';
+          throw new Error(detail);
+        }
+        if (!result?.accessToken) {
+          throw new Error('The server did not return an access token.');
+        }
+        sessionStorage.setItem(tokenKey, result.accessToken);
+        message.textContent = 'Signed in. Opening the API reference…';
+        window.location.assign('/scalar/v1');
+      } catch (error) {
+        message.textContent = error.message || 'Unable to reach the API.';
+        message.dataset.error = 'true';
+      }
+    }
+
+    document.querySelector('#login-tab').addEventListener('click', () => setMode('login'));
+    document.querySelector('#register-tab').addEventListener('click', () => setMode('register'));
+    loginForm.addEventListener('submit', event => {
+      event.preventDefault();
+      submitAuth('/auth/login', {
+        userNameOrEmail: loginForm.userNameOrEmail.value,
+        password: loginForm.password.value
+      });
+    });
+    registerForm.addEventListener('submit', event => {
+      event.preventDefault();
+      submitAuth('/auth/register', {
+        userName: registerForm.userName.value,
+        email: registerForm.email.value,
+        password: registerForm.password.value,
+        confirmPassword: registerForm.confirmPassword.value
+      });
+    });
+
+    if (sessionStorage.getItem(tokenKey)) {
+      document.querySelector('#continue').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>

@@ -1,4 +1,5 @@
 ﻿using GroceryTracker.Domain;
+using GroceryTracker.Infrastructure.Authentication;
 using System.Reflection;
 
 namespace GroceryTracker.Infrastructure.Startup
@@ -10,6 +11,7 @@ namespace GroceryTracker.Infrastructure.Startup
             var assembly = Assembly.GetExecutingAssembly();
             // Register application services here
             services.AddScoped<IUnitOfWork, GroceryContext>();
+            services.AddScoped<IEmailSender, SmtpEmailSender>();
             AddGroceryItemServices(services, assembly);
         }
 
